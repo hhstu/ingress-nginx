@@ -127,8 +127,8 @@ func NewNGINXController(config *Configuration, mc metric.Collector) *NGINXContro
 	n.store = store.New(
 		config.Namespace,
 		config.ConfigMapName,
-		config.TCPConfigMapName,
-		config.UDPConfigMapName,
+		config.TCPConfigMapNames,
+		config.UDPConfigMapNames,
 		config.DefaultSSLCertificate,
 		config.ResyncPeriod,
 		config.Client,

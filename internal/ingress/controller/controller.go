@@ -65,9 +65,9 @@ type Configuration struct {
 	Namespace string
 
 	// +optional
-	TCPConfigMapName string
+	TCPConfigMapNames string
 	// +optional
-	UDPConfigMapName string
+	UDPConfigMapNames string
 
 	DefaultSSLCertificate string
 
@@ -248,6 +248,21 @@ func (n *NGINXController) CheckIngress(ing *networking.Ingress) error {
 	}
 
 	return err
+}
+
+func (n *NGINXController) getStreamServicesAllConfigmaps(configmapNames string, proto apiv1.Protocol) []ingress.L4Service {
+	if configmapNames == "" {
+		return []ingress.L4Service{}
+	}
+	configmapNameList := strings.Split(configmapNames, ",")
+	var svcsAll []ingress.L4Service
+	//TODO check 两个configmap是否有key重复
+	// 事实上这个更应该由 webhook 去做，每当任意一个nginx的 tcp/udp cm 提交时 check 其与其它 cm 是否冲突，是则提交失败
+	for _, configmapName := range configmapNameList {
+		svcs := n.getStreamServices(configmapName, proto)
+		svcsAll = append(svcsAll, svcs...)
+	}
+	return svcsAll
 }
 
 func (n *NGINXController) getStreamServices(configmapName string, proto apiv1.Protocol) []ingress.L4Service {

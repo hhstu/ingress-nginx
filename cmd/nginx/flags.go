@@ -71,16 +71,16 @@ Takes the form "namespace/name". When used together with update-status, the
 controller mirrors the address of this service's endpoints to the load-balancer
 status of all Ingress objects it satisfies.`)
 
-		tcpConfigMapName = flags.String("tcp-services-configmap", "",
-			`Name of the ConfigMap containing the definition of the TCP services to expose.
+		tcpConfigMapNames = flags.String("tcp-services-configmaps", "",
+			`Names of the ConfigMap containing the definition of the TCP services to expose.
 The key in the map indicates the external port to be used. The value is a
-reference to a Service in the form "namespace/name:port", where "port" can
+reference to a Service in the form "namespace/name:port,namespace/name:port", where "port" can
 either be a port number or name. TCP ports 80 and 443 are reserved by the
 controller for servicing HTTP traffic.`)
-		udpConfigMapName = flags.String("udp-services-configmap", "",
-			`Name of the ConfigMap containing the definition of the UDP services to expose.
+		udpConfigMapNames = flags.String("udp-services-configmaps", "",
+			`Names of the ConfigMap containing the definition of the UDP services to expose.
 The key in the map indicates the external port to be used. The value is a
-reference to a Service in the form "namespace/name:port", where "port" can
+reference to a Service in the form "namespace/name:port,namespace/name:port", where "port" can
 either be a port name or number.`)
 
 		resyncPeriod = flags.Duration("sync-period", 0,
@@ -276,8 +276,8 @@ https://blog.maxmind.com/2019/12/18/significant-changes-to-accessing-and-using-g
 		DefaultService:         *defaultSvc,
 		Namespace:              *watchNamespace,
 		ConfigMapName:          *configMap,
-		TCPConfigMapName:       *tcpConfigMapName,
-		UDPConfigMapName:       *udpConfigMapName,
+		TCPConfigMapNames:       *tcpConfigMapNames,
+		UDPConfigMapNames:       *udpConfigMapNames,
 		DefaultSSLCertificate:  *defSSLCertificate,
 		PublishService:         *publishSvc,
 		PublishStatusAddress:   *publishStatusAddress,
